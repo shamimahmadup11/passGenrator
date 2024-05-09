@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 
 const Passgen = () => {
     const [newPass, setNewPass] = useState('');
@@ -8,12 +8,16 @@ const Passgen = () => {
     const [numbers, setNumbers] = useState(true);
     const [symbol, setSymbol] = useState(true);
 
-    
     function PassLength(e) {
-        setLength(e.target.value);
+        if(e.target.value>8){
+            setLength(e.target.value);
+        }
+        else{
+            setLength(8);
+        }
        
     }
-     
+
     function generatePassword() {
         let passString = '';
         if (upperCase) {
@@ -28,24 +32,31 @@ const Passgen = () => {
         if (symbol) {
             passString += '!@#$%^&*()-+{}[]|?.,<>';
         }
-        let newPass = '';
+        let newPassword = '';
         for (let i = 0; i < length; i++) {
             const randomIndex = Math.floor(Math.random() * passString.length);
-            newPass += passString[randomIndex];
+            newPassword += passString[randomIndex];
         }  
-        setNewPass(newPass);
+        setNewPass(newPassword);
+    }
+
+    function copyToClipboard() {
+        navigator.clipboard.writeText(newPass);
     }
 
     return (
-        <div className="p-4">
+        <div className="p-4 h-96 w-1/3 shadow-lg bg-gray-100 rounded-md">
             <div className="mb-4">
                 <input
                     type="text"
-                    className="border border-gray-400 px-4 py-2 mr-2 rounded"
-                    placeholder={newPass}
+                    className="border border-gray-400 px-4 py-2 mr-2 rounded text-black w-3/4"
+                    value={newPass}
                     readOnly
                 />
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button 
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={copyToClipboard}
+                >
                     Copy
                 </button>
             </div>
@@ -53,7 +64,7 @@ const Passgen = () => {
                 <h1 className="text-lg font-bold mb-2">Select Password length: (8-50 characters)</h1>
                 <input
                     type="number"
-                    className="border border-gray-400 px-4 py-2 rounded"
+                    className="border border-gray-400 px-4 py-2 rounded w-1/4"
                     value={length}
                     onChange={PassLength}
                 />
